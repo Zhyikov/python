@@ -22,6 +22,12 @@ if ready == 'да':
         print('Должна быть цифра!')
         questions_quantity = input()
 
+    print(f'До скольки будем считать?')
+    max_answer = input()
+    while not max_answer.isdigit():
+        print('Должна быть цифра!')
+        max_answer = input()
+
 
 else:
     print('''Передумал? Хорошо, может как-нибудь в следующий раз...
