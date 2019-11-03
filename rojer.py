@@ -15,8 +15,15 @@ while ready not in {'да', 'нет'}:
 
 if ready == 'да':
     print('Хорошо')
+    print(f'{name}, сколько примеров ты готов решить?')
+
+    questions_quantity = input()
+    while not questions_quantity.isdigit():
+        print('Должна быть цифра!')
+        questions_quantity = input()
+
+
 else:
     print('''Передумал? Хорошо, может как-нибудь в следующий раз...
 Пока!''')
 
-print(f'{name}, сколько примеров ты готов решить?')
