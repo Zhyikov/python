@@ -7,11 +7,13 @@ print('''Давай проверим твои знания в математик
 ready = input()
 ready = ready.lower()
 
+
 while ready not in {'да', 'нет'}:
     print('''Должно быть да или нет.
 Введи заново''')
     ready = input()
     ready = ready.lower()
+
 
 if ready == 'да':
     print('Хорошо')
