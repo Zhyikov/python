@@ -4,8 +4,8 @@ from timeit import default_timer
 
 def select_mode():
     print('''
-    1 - тренировка
-    0 - выход
+1 - тренировка
+0 - выход
 ''')
     mode = int(input())
     return mode
@@ -58,13 +58,16 @@ def training():
         max_answer = input()
     print('Хорошо, тогда начинаем...')
 
+
     correct_answers = 0
     fails = 0
     spent_time = 0
 
+    questions_number = 0
+    unique_examples = []
+    unique_combinations = int(max_answer)**2
 
     for i in range(int(questions_quantity)):
-        print(f'Пример {i+1}:')
 
         number1 = randint(1, int(max_answer))
         number2 = randint(1, int(max_answer))
@@ -85,27 +88,33 @@ def training():
                 number2 = randint(1, int(max_answer))
             correct_answer = number1 + number2
 
-        print(f'Сколько будет {number1} {sign} {number2}?')
-        start = default_timer()
-        answer = input('Введи ответ:\n')
-        stop = default_timer()
-        spent_time += round(stop - start)
+        example = f'{number1} {sign} {number2}'
+        if example not in unique_examples:
+            unique_examples.append(example)
+            questions_number +=1
 
-        if int(answer) == correct_answer:
-            print('Правильно!')
-            correct_answers += 1
-        else:
-            f = open(f'{name}.errors', 'a')
-            f.write(f'{number1} {sign} {number2}\n')
-            f.close()
-            fails += 1
-            print(f'''Неправильно!
-    Правильный ответ: {correct_answer}''')
+            print(f'Пример {questions_number}:')
+            print(f'Сколько будет {example}?')
+            start = default_timer()
+            answer = input('Введи ответ:\n')
+            stop = default_timer()
+            spent_time += round(stop - start)
+
+            if int(answer) == correct_answer:
+                print('Правильно!')
+                correct_answers += 1
+            else:
+                f = open(f'{name}.errors', 'a')
+                f.write(f'{number1} {sign} {number2}\n')
+                f.close()
+                fails += 1
+                print(f'''Неправильно!
+Правильный ответ: {correct_answer}''')
 
     if fails != 0:
         print(f'''Правильных ответов: {correct_answers}
-    Ошибок: {fails}
-    Затрачено времени: {seconds_convert(spent_time)}''')
+Ошибок: {fails}
+Затрачено времени: {seconds_convert(spent_time)}''')
     else:
         print(f'Ты решил без ошибок за {seconds_convert(spent_time)}')
 
