@@ -19,7 +19,7 @@ exit - выйти''')
         else:
             print('Завожу двигатель')
             engine_status = True
-    if command == 'off':
+        if command == 'off':
         if engine_status:
             print('Глушу двигатель')
             engine_status = False
