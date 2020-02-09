@@ -1,15 +1,22 @@
 from random import randint, choice
 from timeit import default_timer
+import os
 
 
 def select_mode():
-    print('''
-1 - тренировка
-0 - выход
+    if os.path.exists(f'{name}_errors.txt'):
+            print('''
+        1 - тренировка
+        2 - работа над ошибками
+        0 - выход
+    ''')
+    else:
+        print('''
+    1 - тренировка
+    0 - выход
 ''')
     mode = int(input())
     return mode
-
 
 def time_endings(digit):
     if digit == 11:
@@ -58,17 +65,18 @@ def training():
         max_answer = input()
     print('Хорошо, тогда начинаем...')
 
-
     correct_answers = 0
     fails = 0
     spent_time = 0
 
     questions_number = 0
     unique_examples = []
-    unique_combinations = int(max_answer)**2
+    unique_combinatious = int(max_answer)**2
+
 
     for i in range(int(questions_quantity)):
 
+        print(f"попытка {i}")
         number1 = randint(1, int(max_answer))
         number2 = randint(1, int(max_answer))
         sign = choice('+-')
@@ -88,6 +96,7 @@ def training():
                 number2 = randint(1, int(max_answer))
             correct_answer = number1 + number2
 
+
         example = f'{number1} {sign} {number2}'
         if example not in unique_examples:
             unique_examples.append(example)
@@ -104,19 +113,63 @@ def training():
                 print('Правильно!')
                 correct_answers += 1
             else:
-                f = open(f'{name}.errors', 'a')
-                f.write(f'{number1} {sign} {number2}\n')
+                f = open(f'{name}_errors.txt', 'a')
+                f.write(f'{number1} {sign} {number2} 3\n')
                 f.close()
                 fails += 1
                 print(f'''Неправильно!
-Правильный ответ: {correct_answer}''')
+        Правильный ответ: {correct_answer}''')
 
     if fails != 0:
         print(f'''Правильных ответов: {correct_answers}
-Ошибок: {fails}
-Затрачено времени: {seconds_convert(spent_time)}''')
+    Ошибок: {fails}
+    Затрачено времени: {seconds_convert(spent_time)}''')
     else:
         print(f'Ты решил без ошибок за {seconds_convert(spent_time)}')
+
+
+def errors_handling(file_name):
+    with open(file_name, 'r') as f1, open(f'tmp_{file_name}', 'a') as f2:
+
+        correct_answers = 0
+        fails = 0
+        spent_time = 0
+
+        for line in f1:
+            line = line.split()
+            number1, sign, number2, correct_answers_to_solve = line
+
+            number1 = int(number1)
+            number2 = int(number2)
+            correct_answers_to_solve = int(correct_answers_to_solve)
+
+            if sign == '-':
+                correct_answer = number1 - number2
+
+            if sign == '+':        
+                correct_answer = number1 + number2
+            
+            print('Сколько будет ', number1, sign, number2, '?')
+            start = default_timer()
+            answer = input('Введи ответ:\n')
+            stop = default_timer()
+            spent_time += round(stop - start)
+
+            if int(answer) == correct_answer:
+                if correct_answers_to_solve > 1:
+                    f2.write(f'{number1} {sign} {number2} {correct_answers_to_solve}\n')
+                print('Правильно!')
+                correct_answers += 1
+            else:
+                f2.write(f'{number1} {sign} {number2} {correct_answers_to_solve-1}\n')
+                fails += 1
+                print(f'''Неправильно!
+        Правильный ответ: {correct_answer}''')
+    os.remove(file_name)
+    if os.getsize(f'tmp_{file_name}') > 0:
+        os.rename(f'tmp_{file_name}', file_name)
+    else:
+        os.renove(f'tmp_{file_name}') 
 
 #Основной блок программы
 print('Привет! Меня зовут Роджер. А как тебя?')
@@ -133,8 +186,8 @@ while True:
     elif mode == 0:
         print('Пока!')
         break
+    elif mode == 2:
+        errors_handling(f'{name}_errors.txt')
     else:
 #пусто(ничего), так не будет жаловаться
         pass
-
-
