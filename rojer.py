@@ -1,21 +1,24 @@
 from random import randint, choice
 from timeit import default_timer
+from lib import check_input
 import os
 
 
 def select_mode():
     if os.path.exists(f'{name}_errors.txt'):
-            print('''
+        print('''
         1 - тренировка
         2 - работа над ошибками
         0 - выход
     ''')
+        mode = int(check_input(input('Выбери режим\n'),['1', '2', '0']))
+
     else:
         print('''
     1 - тренировка
     0 - выход
 ''')
-    mode = int(input())
+        mode = int(check_input(input('Выбери режим\n'),['1', '0']))
     return mode
 
 def time_endings(digit):
